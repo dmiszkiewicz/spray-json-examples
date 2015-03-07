@@ -12,8 +12,10 @@ class HelloWorldSpec extends Specification {
   object MyJsonProtocol extends DefaultJsonProtocol {
     implicit val personFormat = jsonFormat2(Person)
 
+    //Example jsonFormat for case classes
     implicit def storageFormat[A: JsonFormat] = jsonFormat1(Storage.apply[A])
 
+    //Example jsonFormat for more extended classes( I can just use here a jsonFormat4, but i wanted to show how to handle more complex cases)
     implicit object ColorJsonFormat extends RootJsonFormat[Color] {
       def write(c: Color) = JsObject(
         "name" -> JsString(c.name),
@@ -82,7 +84,7 @@ class HelloWorldSpec extends Specification {
 
   "The color" should {
     "be the same after serialization and deserialization" in {
-      val c = Color("Some",50,100,150)
+      val c = Color("Some", 50, 100, 150)
       val json = c.toJson
       val desC = json.convertTo[Color]
       desC must_=== (c)
